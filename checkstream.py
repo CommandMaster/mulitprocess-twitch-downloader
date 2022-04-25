@@ -9,7 +9,7 @@ client_id=os.environ.get("Client-ID-Twitch")
 
 async def checkUser(userName, token): #returns true if online, false if not
     url = 'https://api.twitch.tv/helix/streams?user_login='+userName
-    url = url.rstrip()
+    #url = url.rstrip()
     client_id=os.environ.get("Client-ID-Twitch")
 
     load_dotenv()
@@ -20,7 +20,7 @@ async def checkUser(userName, token): #returns true if online, false if not
     }
 
     try:
-        print("🔎 checking user: "+userName)
+        #print("🔎 checking user: "+userName)
 
         req = requests.get(url, headers=API_HEADERS)
         jsondata = req.json()
