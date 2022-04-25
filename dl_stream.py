@@ -21,17 +21,17 @@ async def dlstream(channel, folder, workdir):
         await trio.run_process(["streamlink", "twitch.tv/" + channel, 'best', "-o", workdir+tempfilename], stdout=subprocess.DEVNULL)
     except:
         pass
-    
+
     print("🔴 Recording stream is done, of: "+channel)
     print("🧰 Fixing video file, of: "+channel)
     await notification.notification("download done, stat fixing video of: " + channel)  
 
     if(os.path.exists(workdir+tempfilename) is True):  
         try:
-            await trio.run_process(['ffmpeg', '-err_detect', 'ignore_err', '-i', workdir+tempfilename, '-c', 'copy', workdir+tempfilename2], stdout=subprocess.DEVNULL)
+            await trio.run_process(['ffmpeg', '-loglevel', 'quiet', '-err_detect', 'ignore_err', '-i', workdir+tempfilename, '-c', 'copy', workdir+tempfilename2], stdout=subprocess.DEVNULL)
             print("🧰 file fixed")
 
-            await trio.run_process(['ffmpeg', '-i', workdir+tempfilename2, '-c:v', 'libx264', '-crf', '18', '-preset', 'slow', '-c:a', 'copy', workdir+filename + ".mp4"], stdout=subprocess.DEVNULL)
+            await trio.run_process(['ffmpeg', '-loglevel', 'quiet', '-i', workdir+tempfilename2, '-c:v', 'libx264', '-crf', '18', '-preset', 'slow', '-c:a', 'copy', workdir+filename + ".mp4"], stdout=subprocess.DEVNULL)
             print("🧰 file compressed")
 
         except Exception as e:  
@@ -41,8 +41,11 @@ async def dlstream(channel, folder, workdir):
     else:  
         print("▶️ ▶️ Skip fixing and Compressing. File not found.")
 
-    os.remove(workdir+tempfilename)
-    os.remove(workdir+tempfilename2)
+    try:
+        os.remove(workdir+tempfilename)
+        os.remove(workdir+tempfilename2)
+    except:
+        pass
 
     await notification.notification("process done of: " + channel)
     await trio.sleep(3)
