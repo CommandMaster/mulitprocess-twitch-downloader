@@ -10,7 +10,7 @@ Hereby multible streams can be downloaded at once, thanks to mulitprocess suppor
 ```bash
   pip install virtualenv
   virtualenv env
-  source env/bin/acivate
+  source env/bin/activate
 ```
 
 2.requirumens
@@ -18,7 +18,7 @@ Hereby multible streams can be downloaded at once, thanks to mulitprocess suppor
 -python 3.x.x is used
 
 ```bash
-  pip install requirumens.txt
+  pip install -r requirumens.txt
   
   mac
   brew install ffmpeg
