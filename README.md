@@ -29,7 +29,7 @@ Hereby multible streams can be downloaded at once, thanks to mulitprocess suppor
 
 3.configure channellist and change requirumens in .env-example and change name of it into .env
 
-##start
+## Start
 
 to start script
 
