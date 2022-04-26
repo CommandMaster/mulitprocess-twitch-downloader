@@ -1,6 +1,6 @@
 # mulitprocess-twitch-downloader📺⬇️
 
-This Script is able to check a list of Streamers on Twitch.
+This Script is able to check a list of Streamers on Twitch.(currently only twitch)
 Hereby multible streams can be downloaded at once, thanks to mulitprocess support by trio(https://trio.readthedocs.io)
 
 ## Installation
