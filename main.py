@@ -67,7 +67,7 @@ async def starup(channel):
             await sub0(channel)
         else:
             #print("⚫ channel: "+channel+" is offline")
-            await trio.sleep(3)
+            await trio.sleep(600)
 
 
 async def main():
@@ -75,7 +75,9 @@ async def main():
 
     async with trio.open_nursery() as nursery:
         for line in Lines:
-            
-            nursery.start_soon(starup, line.rstrip())
+            if line == '' or '':
+                pass
+            else:
+            	nursery.start_soon(starup, line.rstrip())
 
 trio.run(main)

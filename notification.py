@@ -13,4 +13,4 @@ async def notification(message):
     report["value1"] = message
     requests.post(f"https://maker.ifttt.com/trigger/{event}/with/key/{Authtoken}", data=report)
 
-    print(f'📨send message:"{message}", to event:"{event}"')
+    print(f'📨 send message:"{message}", to event:"{event}"')
