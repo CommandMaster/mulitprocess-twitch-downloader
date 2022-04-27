@@ -75,7 +75,7 @@ async def main():
 
     async with trio.open_nursery() as nursery:
         for line in Lines:
-            if line == '' or '':
+            if not line.rstrip():
                 pass
             else:
             	nursery.start_soon(starup, line.rstrip())
