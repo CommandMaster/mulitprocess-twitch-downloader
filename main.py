@@ -1,16 +1,12 @@
 from __future__ import unicode_literals
-from array import array
-from fileinput import close
-from certifi import contents
+from xml.etree.ElementInclude import include
 from dotenv import load_dotenv
 load_dotenv()
 from datetime import date
-#from rich import print
 import checkstream
 import dl_stream
 import getauth
 import os
-import sys
 import datetime
 import time
 import trio
@@ -44,7 +40,7 @@ async def onlinetimeweighting(channel):
 
     completefilename = os.path.join(dir+'/'+channel, 'weighting.tmp')
     arrayfile = open(completefilename, 'w')
-    print('file written:', completefilename)
+    print('📄⬆️ file written:', completefilename)
     arrayfile.write(str(dayweights))
     arrayfile.close()
     
@@ -56,8 +52,6 @@ async def analyseweights():
         for r in range(len(dayweights)):
             if dayweights[r] == maxval:
                 results.append(r)
-
-        print(results)
     else:
         return 'array error'
     
@@ -78,7 +72,7 @@ async def sub1(channel):
     workdir = workdir+'/'+folder+'/'
 
     print("📂 working dir is: "+workdir)
-    print("🔽 starting download")
+    print("⬇️ starting download")
     await dl_stream.dlstream(channel, folder, workdir)
 
 #folder routine1
@@ -100,6 +94,7 @@ async def starup(channel):
     try:
         completefilename = os.path.join(dir+'/'+channel, 'weighting.tmp')
         arrayfile = open(completefilename,"r")
+        print('📄⬇️ file loaded:', completefilename)
         dayweights = ast.literal_eval(arrayfile.read())
         arrayfile.close()
         if dayweights == 0:
@@ -126,10 +121,10 @@ async def starup(channel):
             weights = await analyseweights()
             for hour in weights:
                 if hour == now.hour:
-                    print("🕚 sleep for a minute")
+                    #print("🕚 sleep for a minute")
                     await trio.sleep(60)
                 else:
-                    print("🕚 sleep for 10 minute")
+                    #print("🕚 sleep for 10 minute")
                     await trio.sleep(600)
 
 

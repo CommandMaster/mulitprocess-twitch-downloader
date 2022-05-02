@@ -1,6 +1,5 @@
 import json
 from aiohttp import client
-from rich import print
 import requests
 import time
 import dotenv

@@ -2,7 +2,6 @@ import os
 import notification
 import subprocess
 from datetime import datetime
-from rich import print
 import trio
 
 async def dlstream(channel, folder, workdir):
