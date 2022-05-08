@@ -1,5 +1,5 @@
 import datetime
-import log
+import modules.log as log
 import os
 import ast
 

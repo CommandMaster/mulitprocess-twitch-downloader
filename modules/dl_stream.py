@@ -1,6 +1,6 @@
 import os
-import notification
-import log
+import modules.notification as notification
+import modules.log as log
 import subprocess
 from datetime import datetime
 import trio

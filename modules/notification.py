@@ -1,6 +1,6 @@
 import requests
 from dotenv import load_dotenv
-import log
+import modules.log as log
 load_dotenv()
 import os
 import trio

@@ -3,8 +3,8 @@ from aiohttp import client
 import requests
 import time
 import dotenv
-import notification
-import log
+import modules.notification as notification
+import modules.log as log
 import trio
 import os
 

@@ -3,11 +3,11 @@ from xml.etree.ElementInclude import include
 from dotenv import load_dotenv
 load_dotenv()
 from datetime import date
-import checkstream
-import dl_stream
-import getauth
-import weighting
-import log
+import modules.checkstream as checkstream
+import modules.dl_stream as dl_stream
+import modules.getauth as getauth
+import modules.weighting as weighting
+import modules.log as log
 import os
 import datetime
 import time
