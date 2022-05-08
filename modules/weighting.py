@@ -1,18 +1,20 @@
 import datetime
 import modules.log as log
 import os
-import ast
+from ast import literal_eval
 
 now = datetime.datetime.now()
 dir = os.environ.get("DIR")
 
 async def readstate(channel):
     global dayweights
-    completefilename = os.path.join(dir+'/'+channel, 'weighting.tmp')
-    arrayfile = open(completefilename,"r")
+    completefilename = dir+'/'+channel+'/weighting.tmp'
+    arrayfile = open(completefilename)
     text = '📄⬇️ file loaded: '+ completefilename
     log.printlog(text)
-    dayweights = ast.literal_eval(arrayfile.read())
+    dayweightss = arrayfile.read()
+    dayweights = literal_eval(dayweightss)
+    print(dayweights[21])
     arrayfile.close()
     if dayweights == 0:
         log.printlog(errror)
@@ -35,7 +37,8 @@ async def onlinetimeweighting(channel):
 
     completefilename = os.path.join(dir+'/'+channel, 'weighting.tmp')
     arrayfile = open(completefilename, 'w')
-    log.printlog('📄⬆️ file written:', completefilename)
+    text = '📄⬆️ file written: '+ completefilename
+    log.printlog(text)
     arrayfile.write(str(dayweights))
     arrayfile.close()
     
