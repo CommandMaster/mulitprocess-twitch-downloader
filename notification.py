@@ -1,5 +1,6 @@
 import requests
 from dotenv import load_dotenv
+import log
 load_dotenv()
 import os
 import trio
@@ -12,4 +13,4 @@ async def notification(message):
     report["value1"] = message
     requests.post(f"https://maker.ifttt.com/trigger/{event}/with/key/{Authtoken}", data=report)
 
-    print(f'📨 send message:"{message}", to event:"{event}"')
+    log.printlog(f'📨 send message:"{message}", to event:"{event}"')

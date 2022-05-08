@@ -4,6 +4,7 @@ import requests
 import time
 import dotenv
 import notification
+import log
 import trio
 import os
 
@@ -20,11 +21,11 @@ async def post(user):
     token = jsondata['access_token']
     wait = jsondata['expires_in']-daysec
 
-    print('🔑 getting token, of: '+user)
-    #print(jsondata)
-    print('🔑 auth token is= '+token+', of: '+user)
+    log.printlog('🔑 getting token, of: '+user)
+    #log.printlog(jsondata)
+    log.printlog('🔑 auth token is= '+token+', of: '+user)
     days = wait%60%60
-    print('💤 sleeps for '+str(wait)+'s or '+str(days)+'d, of: '+user)
+    log.printlog('💤 sleeps for '+str(wait)+'s or '+str(days)+'d, of: '+user)
 
     wait = wait + time.time()
     

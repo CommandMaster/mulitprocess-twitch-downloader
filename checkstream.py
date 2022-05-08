@@ -1,9 +1,9 @@
 from aiohttp import client
 import requests
 from dotenv import load_dotenv
-from rich import print
 import os
 import trio
+import logging
 
 client_id=os.environ.get("Client-ID-Twitch")
 
@@ -20,7 +20,7 @@ async def checkUser(userName, token): #returns true if online, false if not
     }
 
     try:
-        #print("🔎 checking user: "+userName)
+        #logging.printlog("🔎 checking user: "+userName)
 
         req = requests.get(url, headers=API_HEADERS)
         jsondata = req.json()
@@ -32,5 +32,5 @@ async def checkUser(userName, token): #returns true if online, false if not
             return False
             
     except Exception as e:
-        print("⁉️ Error checking user: ", e)
+        logging.logging.printloglog("⁉️ Error checking user: ", e)
         return False
