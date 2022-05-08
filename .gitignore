@@ -3,6 +3,7 @@ test.py
 /.vscode
 /.__pycache__
 /.env
+/.__pycache__
 __pycache__/checkstream.cpython-39.pyc
 __pycache__/dl_stream.cpython-39.pyc
 __pycache__/getauth.cpython-39.pyc
