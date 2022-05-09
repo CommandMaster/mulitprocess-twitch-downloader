@@ -20,44 +20,43 @@ Lines = channellist.readlines()
 dir = os.environ.get("DIR")
 #os.chdir(dir)
 
-log.printlog("📂 save path is: "+dir)
+log.printlog('',"📂 save path is: "+dir)
 
 #folder routine2
-async def sub1(channel):
-    global workdir
+async def sub1():
+    global workdir, channel
     today = date.today()
     folder = channel + "-stream-" + str(today)
 
     if os.path.isdir(workdir+'/'+folder) == False:
         os.mkdir(workdir+'/'+folder)
-        log.printlog("📂 sub folder created for: "+channel)
+        log.printlog(channel, "📂 sub folder created")
     else:
-        log.printlog("📂 sub folder allready created for: "+channel)
+        log.printlog(channel, "📂 sub folder allready created")
 
     workdir = workdir+'/'+folder+'/'
 
-    log.printlog("📂 working dir is: "+workdir)
-    log.printlog("⬇️ starting download")
+    log.printlog(channel, "📂 working dir is: "+workdir)
+    log.printlog(channel, "⬇️ starting download")
     await dl_stream.dlstream(channel, folder, workdir)
 
 #folder routine1
-async def sub0(channel):
-    global workdir
+async def sub0():
+    global workdir, channel
     #check ob save directoy online ist 
     workdir = dir+'/'+channel
 
     if os.path.isdir(dir+'/'+channel) ==False:
         os.mkdir(dir+'/'+channel)
-        log.printlog("📂 folder created for: "+channel)
+        log.printlog(channel, "📂 folder created")
     else:
-        log.printlog("📂 folder allready created for: "+channel)
+        log.printlog(channel, "📂 folder allready created")
 
-    await sub1(channel)
+    await sub1()
 
 async def starup(channel):
-
     await weighting.readstate(channel)
-
+    
     while True:
         #check if token is to old
         try:
@@ -69,9 +68,9 @@ async def starup(channel):
         
         #check streamstate
         if await checkstream.checkUser(channel, token) == True:
-            log.printlog("🔴 channel: "+channel+" is online")
+            log.printlog(channel,  "🔴 is online")
             await weighting.onlinetimeweighting(channel)
-            await sub0(channel)
+            await sub0()
         else:
             #log.printlog("⚫ channel: "+channel+" is offline")
             weights = await weighting.analyseweights()
@@ -85,7 +84,7 @@ async def starup(channel):
 
 
 async def main():
-    log.printlog("🧑‍🤝‍🧑 starting threads")
+    log.printlog('',"🧑‍🤝‍🧑 starting threads")
 
     async with trio.open_nursery() as nursery:
         for line in Lines:

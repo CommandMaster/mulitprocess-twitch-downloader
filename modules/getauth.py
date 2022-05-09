@@ -21,11 +21,11 @@ async def post(user):
     token = jsondata['access_token']
     wait = jsondata['expires_in']-daysec
 
-    log.printlog('🔑 getting token, of: '+user)
+    log.printlog(user, '🔑 getting token, of: '+user)
     #log.printlog(jsondata)
-    log.printlog('🔑 auth token is= '+token+', of: '+user)
+    log.printlog(user, '🔑 auth token is= '+token+', of: '+user)
     days = wait%60%60
-    log.printlog('💤 sleeps for '+str(wait)+'s or '+str(days)+'d, of: '+user)
+    log.printlog(user, '💤 sleeps for '+str(wait)+'s or '+str(days)+'d, of: '+user)
 
     wait = wait + time.time()
     

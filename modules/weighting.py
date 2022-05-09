@@ -11,10 +11,9 @@ async def readstate(channel):
     completefilename = dir+'/'+channel+'/weighting.tmp'
     arrayfile = open(completefilename)
     text = '📄⬇️ file loaded: '+ completefilename
-    log.printlog(text)
+    log.printlog(channel, text)
     dayweightss = arrayfile.read()
     dayweights = literal_eval(dayweightss)
-    print(dayweights[21])
     arrayfile.close()
     if dayweights == 0:
         log.printlog(errror)
@@ -38,7 +37,7 @@ async def onlinetimeweighting(channel):
     completefilename = os.path.join(dir+'/'+channel, 'weighting.tmp')
     arrayfile = open(completefilename, 'w')
     text = '📄⬆️ file written: '+ completefilename
-    log.printlog(text)
+    log.printlog(channel, text)
     arrayfile.write(str(dayweights))
     arrayfile.close()
     
