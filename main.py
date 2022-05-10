@@ -23,8 +23,8 @@ dir = os.environ.get("DIR")
 log.printlog('',"📂 save path is: "+dir)
 
 #folder routine2
-async def sub1():
-    global workdir, channel
+async def sub1(channel):
+    global workdir
     today = date.today()
     folder = channel + "-stream-" + str(today)
 
@@ -41,8 +41,8 @@ async def sub1():
     await dl_stream.dlstream(channel, folder, workdir)
 
 #folder routine1
-async def sub0():
-    global workdir, channel
+async def sub0(channel):
+    global workdir
     #check ob save directoy online ist 
     workdir = dir+'/'+channel
 
@@ -52,7 +52,7 @@ async def sub0():
     else:
         log.printlog(channel, "📂 folder allready created")
 
-    await sub1()
+    await sub1(channel)
 
 async def starup(channel):
     await weighting.readstate(channel)
@@ -70,7 +70,7 @@ async def starup(channel):
         if await checkstream.checkUser(channel, token) == True:
             log.printlog(channel,  "🔴 is online")
             await weighting.onlinetimeweighting(channel)
-            await sub0()
+            await sub0(channel)
         else:
             #log.printlog("⚫ channel: "+channel+" is offline")
             weights = await weighting.analyseweights()
