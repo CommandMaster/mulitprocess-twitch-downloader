@@ -1,3 +1,4 @@
+
 import os
 import modules.notification as notification
 import modules.log as log
@@ -22,8 +23,8 @@ async def dlstream(channel, folder, workdir):
     except:
         pass
 
-    log.printlog("🔴 Recording stream is done, of: "+channel)
-    log.printlog("🧰 Fixing video file, of: "+channel)
+    log.printlog(channel, "🔴 Recording stream is done")
+    log.printlog(channel, "🧰 Fixing video file")
     await notification.notification("download done, stat fixing video of: " + channel)  
 
     if(os.path.exists(workdir+tempfilename) is True):  
