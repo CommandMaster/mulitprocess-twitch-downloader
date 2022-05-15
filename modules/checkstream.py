@@ -32,5 +32,5 @@ async def checkUser(userName, token): #returns true if online, false if not
             return False
             
     except Exception as e:
-        logging.logging.printloglog("⁉️ Error checking user: ", e)
+        logging.printlog("⁉️ Error checking user: ", e)
         return False

@@ -16,7 +16,7 @@ async def dlstream(channel, folder, workdir):
     tempfilename2 = "temp_2_" + filename + ".mp4"
 
     await notification.notification("starting download of: "+channel)
-    log.printlog(channel, "🔽 download started, of: "+channel)
+    log.printlog(channel, "🔽 download started")
 
     try:
         await trio.run_process(["streamlink", "twitch.tv/" + channel, 'best', "-o", workdir+tempfilename], stdout=subprocess.DEVNULL)
