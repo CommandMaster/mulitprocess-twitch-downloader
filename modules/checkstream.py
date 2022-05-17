@@ -3,7 +3,7 @@ import requests
 from dotenv import load_dotenv
 import os
 import trio
-import logging
+import modules.log as log
 
 client_id=os.environ.get("Client-ID-Twitch")
 
@@ -32,5 +32,5 @@ async def checkUser(userName, token): #returns true if online, false if not
             return False
             
     except Exception as e:
-        logging.printlog("⁉️ Error checking user: ", e)
+        log.printlog("⁉️ Error checking user: ", e)
         return False
