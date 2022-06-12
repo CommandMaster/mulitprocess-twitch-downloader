@@ -3,11 +3,12 @@ import requests
 from dotenv import load_dotenv
 import os
 import trio
-import modules.log as log
+from logbook import Logger, StreamHandler
 
 client_id=os.environ.get("Client-ID-Twitch")
 
 async def checkUser(userName, token): #returns true if online, false if not
+    log = Logger(userName)
     url = 'https://api.twitch.tv/helix/streams?user_login='+userName
     #url = url.rstrip()
     client_id=os.environ.get("Client-ID-Twitch")
@@ -32,5 +33,5 @@ async def checkUser(userName, token): #returns true if online, false if not
             return False
             
     except Exception as e:
-        log.printlog("⁉️ Error checking user: ", e)
+        log.error("⁉️ Error checking user: ", e)
         return False

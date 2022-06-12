@@ -1,12 +1,13 @@
-
 import os
 import modules.notification as notification
-import modules.log as log
 import subprocess
 from datetime import datetime
 import trio
+from logbook import Logger, StreamHandler
+import modules.twitter_bot as twitter_bot
 
-async def dlstream(channel, folder, workdir):
+async def dlstream(channel, filename, workdir):
+    log = Logger(channel)
     #os.chdir(folder)
     
     url = 'https://www.twitch.tv/' + channel
@@ -16,31 +17,34 @@ async def dlstream(channel, folder, workdir):
     tempfilename2 = "temp_2_" + filename + ".mp4"
 
     await notification.notification("starting download of: "+channel)
-    log.printlog(channel, "🔽 download started")
+    log.info("🔽 download started")
 
     try:
         await trio.run_process(["streamlink", "twitch.tv/" + channel, 'best', "-o", workdir+tempfilename], stdout=subprocess.DEVNULL)
     except:
         pass
 
-    log.printlog(channel, "🔴 Recording stream is done")
-    log.printlog(channel, "🧰 Fixing video file")
-    await notification.notification("download done, stat fixing video of: " + channel)  
+
+    log.info("🔴 Recording stream is done")
+    await notification.notification("download done, start fixing")
+
+    
+    log.info("🧰 Fixing video file") 
 
     if(os.path.exists(workdir+tempfilename) is True):  
         try:
             await trio.run_process(['ffmpeg', '-loglevel', 'quiet', '-err_detect', 'ignore_err', '-i', workdir+tempfilename, '-c', 'copy', workdir+tempfilename2], stdout=subprocess.DEVNULL)
-            log.printlog(channel, "🧰 file fixed")
+            log.info("🧰 file fixed")
 
             await trio.run_process(['ffmpeg', '-loglevel', 'quiet', '-i', workdir+tempfilename2, '-c:v', 'libx264', '-crf', '18', '-preset', 'slow', '-c:a', 'copy', workdir+filename + ".mp4"], stdout=subprocess.DEVNULL)
-            log.printlog(channel, "🧰 file compressed")
+            log.info("🧰 file compressed")
 
         except Exception as e:  
-            log.printlog(channel, e)
-        log.printlog(channel, "🗑️ deleted temp files!")
+            log.info(e)
+        log.info("🗑️ deleted temp files!")
 
     else:  
-        log.printlog(channel, "▶️ ▶️ Skip fixing and Compressing. File not found.")
+        log.info("▶️ ▶️ Skip fixing and Compressing. File not found.")
 
     try:
         os.remove(workdir+tempfilename)
@@ -49,4 +53,6 @@ async def dlstream(channel, folder, workdir):
         pass
 
     await notification.notification("process done of: " + channel)
+        #trio.run_process(['arch', '-x86_64', '$(which python3)', '-m', '/Users/eliasmaurer/Documents/twitch-downloader/versions/v2/modules/twitter_bot.py', 'gott', workdir, folder])
     await trio.sleep(3)
+    return filename

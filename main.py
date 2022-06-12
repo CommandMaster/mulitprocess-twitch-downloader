@@ -7,57 +7,62 @@ import modules.checkstream as checkstream
 import modules.dl_stream as dl_stream
 import modules.getauth as getauth
 import modules.weighting as weighting
-import modules.log as log
+import modules.notification as notification
+import logbook
+import sys
 import os
 import datetime
 import time
 import trio
+
+logbook.StreamHandler(sys.stdout).push_application()
+log = logbook.Logger('main')
+logbook.set_datetime_format("local")
 
 now = datetime.datetime.now()
 listname = os.environ.get("LISTNAME")
 channellist = open(listname, "r")
 Lines = channellist.readlines()
 dir = os.environ.get("DIR")
-#os.chdir(dir)
 
-log.printlog('',"📂 save path is: "+dir)
+log.info("📂 save path is: "+dir)
 
 #folder routine2
 async def sub1(channel):
-    global workdir
+    workdir = dir+'/'+channel
     today = date.today()
     folder = channel + "-stream-" + str(today)
 
     if os.path.isdir(workdir+'/'+folder) == False:
         os.mkdir(workdir+'/'+folder)
-        log.printlog(channel, "📂 sub folder created")
+        log.info("📂 sub folder created")
     else:
-        log.printlog(channel, "📂 sub folder allready created")
+        log.info("📂 sub folder allready created")
 
     workdir = workdir+'/'+folder+'/'
 
-    log.printlog(channel, "📂 working dir is: "+workdir)
-    log.printlog(channel, "⬇️ starting download")
-    await dl_stream.dlstream(channel, folder, workdir)
+    log.info("📂 working dir is: "+workdir)
+    log.info("⬇️ starting download")
+    filename = now.strftime("%H.%M")
+    await dl_stream.dlstream(channel, filename, workdir)
 
 #folder routine1
-async def sub0(channel):
-    global workdir
-    #check ob save directoy online ist 
-    workdir = dir+'/'+channel
+async def check_main_folder(channel):
 
     if os.path.isdir(dir+'/'+channel) ==False:
         os.mkdir(dir+'/'+channel)
-        log.printlog(channel, "📂 folder created")
+        log.info("📂 folder created")
     else:
-        log.printlog(channel, "📂 folder allready created")
-
-    await sub1(channel)
+        log.info("📂 folder allready created")
 
 async def starup(channel):
+    global log
+    notification.user = channel
+    await check_main_folder(channel)
     await weighting.readstate(channel)
     
     while True:
+        log = logbook.Logger(channel)
         #check if token is to old
         try:
             if wait <= time.time():
@@ -68,23 +73,26 @@ async def starup(channel):
         
         #check streamstate
         if await checkstream.checkUser(channel, token) == True:
-            log.printlog(channel,  "🔴 is online")
+            log.info("🔴 is online")
             await weighting.onlinetimeweighting(channel)
-            await sub0(channel)
+            await sub1(channel)
         else:
-            #log.printlog("⚫ channel: "+channel+" is offline")
+            #log.info("⚫ channel: "+channel+" is offline")
             weights = await weighting.analyseweights()
+            if weights == 'array error':
+                log.error(weights)
+                pass
             for hour in weights:
                 if hour == now.hour:
-                    #log.printlog("🕚 sleep for a minute")
+                    #log.info("🕚 sleep for a minute")
                     await trio.sleep(60)
                 else:
-                    #log.printlog("🕚 sleep for 10 minute")
+                    #log.info("🕚 sleep for 10 minute")
                     await trio.sleep(600)
 
 
-async def main():
-    log.printlog('',"🧑‍🤝‍🧑 starting threads")
+async def starr_threads():
+    log.info("🧑‍🤝‍🧑 starting threads")
 
     async with trio.open_nursery() as nursery:
         for line in Lines:
@@ -93,4 +101,5 @@ async def main():
             else:
             	nursery.start_soon(starup, line.rstrip())
 
-trio.run(main)
+if __name__ == "__main__":
+    trio.run(starr_threads)

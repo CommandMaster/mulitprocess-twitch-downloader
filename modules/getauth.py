@@ -4,7 +4,7 @@ import requests
 import time
 import dotenv
 import modules.notification as notification
-import modules.log as log
+from logbook import Logger, StreamHandler
 import trio
 import os
 
@@ -14,6 +14,7 @@ clientid = os.environ.get("Client-ID-Twitch")
 clientsecret = os.environ.get("Authorization-Twitch")
 
 async def post(user):
+    log = Logger(user)
     daysec = 2456000
     url = 'https://id.twitch.tv/oauth2/token?client_id='+clientid+'&client_secret='+clientsecret+'&grant_type=client_credentials'
     req = requests.post(url)
@@ -21,11 +22,11 @@ async def post(user):
     token = jsondata['access_token']
     wait = jsondata['expires_in']-daysec
 
-    log.printlog(user, '🔑 getting token')
-    #log.printlog(jsondata)
-    log.printlog(user, '🔑 auth token is= '+token)
+    log.info('🔑 getting token')
+    #log.info(jsondata)
+    log.info('🔑 auth token is= '+token)
     days = wait%60%60
-    log.printlog(user, '💤 sleeps for '+str(wait)+'s or '+str(days))
+    log.info('💤 sleeps for '+str(wait)+'s or '+str(days))
 
     wait = wait + time.time()
     
